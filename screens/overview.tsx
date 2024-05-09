@@ -2,6 +2,7 @@ import { addDoc, collection } from '@firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
 import { View, Text, Button, SafeAreaView } from 'react-native';
+import { TextInput } from 'react-native-gesture-handler';
 import { database } from 'utils/firebase';
 
 const questions = [
@@ -79,8 +80,6 @@ const questions = [
   },
 ];
 
-console.log(questions[0].question); //O que é JavaScript?
-
 function Overview() {
   const [currentQuestion, setCurrentQuestion] = useState(-1);
   const [score, setScore] = useState(0);
@@ -114,7 +113,7 @@ function Overview() {
 
   return (
     <SafeAreaView style={{ margin: 32 }}>
-      {questions > -1 ? (
+      {currentQuestion > -1 ? (
         <>
           <Text style={{ marginBottom: 16 }}>{questions[currentQuestion].question}</Text>
           {questions[currentQuestion].options.map((option, index) => (
@@ -126,6 +125,18 @@ function Overview() {
       ) : (
         <>
           <Text style={{ marginBottom: 16 }}>Digite seu nickname:</Text>
+          <TextInput
+            style={{
+              height: 40,
+              borderColor: 'gray',
+              borderWidth: 1,
+              marginBottom: 16,
+              padding: 10,
+            }}
+            onChangeText={setNickname}
+            value={nickname}
+          />
+          <Button title="INICIAR QUIZ" onPress={() => setCurrentQuestion(0)} />
         </>
       )}
     </SafeAreaView>
