@@ -101,6 +101,7 @@ function Overview() {
       try {
         //FIREBASE - FIRESTORE
         await addDoc(collection(database, 'scores'), {
+          nickname,
           score,
           timestamp: new Date(),
         });
