@@ -1,5 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { QuizProvider } from 'provider/quizProvider';
 
 import { BackButton } from '../components/BackButton';
 import Details from '../screens/details';
