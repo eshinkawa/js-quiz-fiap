@@ -1,13 +1,15 @@
 import { collection, onSnapshot, query } from '@firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import { orderBy, limit } from 'firebase/firestore';
-import React, { useEffect, useState } from 'react';
+import { QuizContext } from 'provider/quizProvider';
+import React, { useEffect, useState, useContext } from 'react';
 import { ScrollView, Text, View, StyleSheet, Button } from 'react-native';
 import { database } from 'utils/firebase';
 
 function Details() {
   const [scores, setScores] = useState([]);
   const navigation = useNavigation();
+  const { setCurrentQuestion } = useContext(QuizContext);
 
   useEffect(() => {
     const scoresCol = query(collection(database, 'scores'), orderBy('score', 'desc'));
@@ -32,7 +34,13 @@ function Details() {
         </View>
       ))}
 
-      <Button title="REINICIAR QUIZ" onPress={() => navigation.navigate('Overview')} />
+      <Button
+        title="REINICIAR QUIZ"
+        onPress={() => {
+          setCurrentQuestion(-1); //reseta o quiz
+          navigation.navigate('Overview');
+        }}
+      />
     </ScrollView>
   );
 }
@@ -42,6 +50,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     padding: 16,
+    marginBottom: 32,
   },
   scoreEntry: {
     padding: 10,

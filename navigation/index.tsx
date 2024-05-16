@@ -15,17 +15,19 @@ const Stack = createStackNavigator<RootStackParamList>();
 
 export default function RootStack() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Overview">
-        <Stack.Screen name="Overview" component={Overview} />
-        <Stack.Screen
-          name="Details"
-          component={Details}
-          options={({ navigation }) => ({
-            headerLeft: () => <BackButton onPress={navigation.goBack} />,
-          })}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <QuizProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Overview">
+          <Stack.Screen name="Overview" component={Overview} />
+          <Stack.Screen
+            name="Details"
+            component={Details}
+            options={({ navigation }) => ({
+              headerLeft: () => <BackButton onPress={navigation.goBack} />,
+            })}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </QuizProvider>
   );
 }

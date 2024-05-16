@@ -1,6 +1,7 @@
 import { addDoc, collection } from '@firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
+import { QuizContext } from 'provider/quizProvider';
+import React, { useContext, useState } from 'react';
 import { View, Text, Button, SafeAreaView } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { database } from 'utils/firebase';
@@ -81,36 +82,10 @@ const questions = [
 ];
 
 function Overview() {
-  const [currentQuestion, setCurrentQuestion] = useState(-1);
-  const [score, setScore] = useState(0);
+  const { currentQuestion, setCurrentQuestion, score, setScore, handleAnswer } =
+    useContext(QuizContext);
   const navigation = useNavigation();
   const [nickname, setNickname] = useState('');
-
-  const handleAnswer = async (option: string) => {
-    //se a opção for igual a resposta
-    if (option === questions[currentQuestion].answer) {
-      setScore(score + 1);
-    }
-
-    // navegação para a próxima pergunta
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-    }
-    // se for a última pergunta, navega para a tela de detalhes e salva o score no firestore
-    else {
-      try {
-        //FIREBASE - FIRESTORE
-        await addDoc(collection(database, 'scores'), {
-          nickname,
-          score,
-          timestamp: new Date(),
-        });
-        navigation.navigate('Details');
-      } catch (error) {
-        console.error('Error adding document: ', error);
-      }
-    }
-  };
 
   return (
     <SafeAreaView style={{ margin: 32 }}>
@@ -125,6 +100,7 @@ function Overview() {
         </>
       ) : (
         <>
+          <Text style={{ marginBottom: 16 }}>Da ultima vez você acertou {score} questões!</Text>
           <Text style={{ marginBottom: 16 }}>Digite seu nickname:</Text>
           <TextInput
             style={{
@@ -137,7 +113,13 @@ function Overview() {
             onChangeText={setNickname}
             value={nickname}
           />
-          <Button title="INICIAR QUIZ" onPress={() => setCurrentQuestion(0)} />
+          <Button
+            title="INICIAR QUIZ"
+            onPress={() => {
+              setScore(0);
+              setCurrentQuestion(0);
+            }}
+          />
         </>
       )}
     </SafeAreaView>
